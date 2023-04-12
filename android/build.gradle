@@ -217,6 +217,8 @@ repositories {
 def kotlin_version = getExtOrDefault('kotlinVersion')
 
 dependencies {
+  implementation 'com.google.mlkit:face-detection:16.1.2'
+
   // noinspection GradleDynamicVersion
   implementation 'com.facebook.react:react-native:+'
 
