@@ -3,6 +3,7 @@ import type { CameraDevice, CameraDeviceFormat, ColorSpace, VideoStabilizationMo
 import type { CameraRuntimeError } from './CameraError';
 import type { CameraPreset } from './CameraPreset';
 import type { Frame } from './Frame';
+import type { faces } from 'react-native-vision-camera/src/Facess';
 
 export interface FrameProcessorPerformanceSuggestion {
   type: 'can-use-higher-fps' | 'should-use-lower-fps';
@@ -193,6 +194,7 @@ export interface CameraProps extends ViewProps {
    * ```
    */
   frameProcessor?: (frame: Frame) => void;
+  onFaceDetected: (faces: faces) => void;
   /**
    * Specifies the maximum frame rate the frame processor can use, independent of the Camera's frame rate (`fps` property).
    *

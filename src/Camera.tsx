@@ -117,6 +117,17 @@ export class Camera extends React.PureComponent<CameraProps> {
    * })
    * ```
    */
+
+  public async getImageForFace(faceID: { FaceId: number }): Promise<void> {
+    try {
+      return await CameraModule.getImageForFaceId(this.handle, faceID);
+    }
+    catch (e) {
+      tryParseNativeCameraError(e)
+    }
+
+  }
+
   public async takePhoto(options?: TakePhotoOptions): Promise<PhotoFile> {
     try {
       return await CameraModule.takePhoto(this.handle, options ?? {});
@@ -454,10 +465,31 @@ export class Camera extends React.PureComponent<CameraProps> {
     }
   }
 
+  faceDetectedCallback = () => {
+    const tempCallback = (sucess: any): void => {
+      this.props.onFaceDetected(sucess)
+      if (sucess == null) {
+        return this.faceDetectedCallback()
+      }
+      else { return this.faceDetectedCallback() }
+
+    };
+
+    try {
+      CameraModule.tempFaceDetected(this.handle, tempCallback)
+    }
+    catch (e: any) {
+      alert(e)
+    }
+  }
+
   /** @internal */
   componentDidUpdate(): void {
     if (!this.isNativeViewMounted) return;
     const frameProcessor = this.props.frameProcessor;
+    if (frameProcessor)
+      this.faceDetectedCallback()
+
     if (frameProcessor !== this.lastFrameProcessor) {
       // frameProcessor argument identity changed. Update native to reflect the change.
       if (frameProcessor != null) this.setFrameProcessor(frameProcessor);
